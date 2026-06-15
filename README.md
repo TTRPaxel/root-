@@ -1,4 +1,5 @@
 # root#
+<img width="900" height="900" alt="Logo" src="https://github.com/user-attachments/assets/8ed8533c-1bb6-4996-98b8-5165991606d5" />
 
 This is my custom programming language.
 Idk what else to say.
