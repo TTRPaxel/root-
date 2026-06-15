@@ -1,0 +1,9 @@
+// root-window core memory mapping allocation
+// Offset 0: Window Width
+// Offset 1: Window Height
+// Offset 2: Red Component (0-255)
+// Offset 3: Green Component (0-255)
+// Offset 4: Blue Component (0-255)
+// Offset 5: Close Request Flag (0 = Run, 1 = Exit)
+
+let win_config = alloc(6);
