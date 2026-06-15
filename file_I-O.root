@@ -1,0 +1,32 @@
+fn main() {
+    print("Requesting unmanaged kernel file handle allocation...");
+
+    unsafe {
+        // Open file "log.txt" in write mode ("w")
+        // Returns an integer file descriptor handle from the table
+        let log_file = file_open("log.txt", "w");
+
+        // Validate if handle address is high/valid (not 0)
+        if log_file > 0 {
+            print("Kernel file descriptor successfully bound. Writing data payload...");
+            
+            file_write_str(log_file, "--- root# Low Level System Log ---\n");
+            file_write_str(log_file, "Project status: Active\n");
+
+            let mut iteration = 1;
+            while iteration <= 5 {
+                file_write_str(log_file, "Logging sequential hardware event tick...\n");
+                iteration = iteration + 1;
+            }
+
+            print("Payload complete. Flushing kernel buffers and unlocking file handle context...");
+            file_close(log_file);
+        }
+        
+        if log_file == 0 {
+            print("System IO Error: Access denied or storage pipeline blocked.");
+        }
+    }
+
+    print("Execution complete.");
+}
