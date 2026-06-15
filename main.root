@@ -1,33 +1,29 @@
-include root_window;
-
 fn main() {
-    print("Configuring custom root-window memory space...");
+    print("Initializing raw hardware IOCTL port configuration registers...");
 
     unsafe {
-        *win_config = 500;
-        *(win_config + 1) = 400;
-        
-        *(win_config + 2) = 40;    
-        *(win_config + 3) = 44;    
-        *(win_config + 4) = 52;    
-        
-        *(win_config + 5) = 0;
+        // Claim exclusive user-space handle ownership of COM3 at 115200 baud rate clock speed
+        let hw_device = hardware_open_port("COM3", 115200);
 
-        print("Spawning low-level Win32 Core Operating System Window handle...");
-        init_surface(win_config);
-
-        let mut is_running = 1;
-        let mut status = 0;
-
-        while is_running == 1 {
-            update_surface(win_config);
-            status = *(win_config + 5);
+        if hw_device > 0 {
+            print("Hardware link established. Transmitting signal packets down the wire...");
             
-            if status == 1 {
-                is_running = 0;
+            let mut pulse = 0;
+            while pulse < 5 {
+                // Blast raw byte character 65 ('A') out of the transmission hardware register
+                hardware_write_byte(hw_device, 65);
+                print("Byte character signal pulsed out.");
+                pulse = pulse + 1;
             }
+
+            print("Releasing hardware port handle registry locks back to operating system...");
+            hardware_close_port(hw_device);
+        }
+
+        if hw_device == 0 {
+            print("Hardware Warning: COM3 offline, disconnected, or bus line busy.");
         }
     }
 
-    print("Window surface destroyed safely.");
+    print("Pipeline routine complete.");
 }
