@@ -1,0 +1,33 @@
+include root_window;
+
+fn main() {
+    print("Configuring custom root-window memory space...");
+
+    unsafe {
+        *win_config = 500;
+        *(win_config + 1) = 400;
+        
+        *(win_config + 2) = 40;    
+        *(win_config + 3) = 44;    
+        *(win_config + 4) = 52;    
+        
+        *(win_config + 5) = 0;
+
+        print("Spawning low-level Win32 Core Operating System Window handle...");
+        init_surface(win_config);
+
+        let mut is_running = 1;
+        let mut status = 0;
+
+        while is_running == 1 {
+            update_surface(win_config);
+            status = *(win_config + 5);
+            
+            if status == 1 {
+                is_running = 0;
+            }
+        }
+    }
+
+    print("Window surface destroyed safely.");
+}
