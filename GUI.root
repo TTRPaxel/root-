@@ -1,0 +1,52 @@
+include root_window;
+
+fn main() {
+    print("Configuring hardware buffer memory spaces...");
+
+    unsafe {
+        *win_config = 600;         // Canvas Width
+        *(win_config + 1) = 500;   // Canvas Height
+        
+        // Base canvas shade (RGB: 30, 30, 35)
+        *(win_config + 2) = 30;    
+        *(win_config + 3) = 30;    
+        *(win_config + 4) = 35;    
+        
+        *(win_config + 5) = 0;     // Execution active flag register
+
+        print("Spawning high-speed Win32 DIB memory frame surface...");
+        init_surface(win_config);
+
+        print("Executing manual pipeline pixel blit calculations...");
+        
+        let mut y = 150;
+        let mut x = 0;
+
+        // Loop across coordinates to render a shape line-by-line
+        while y < 350 {
+            x = 200;
+            while x < 400 {
+                // Pass color int: 0x00D2FF (53919 in decimal)
+                draw_pixel(win_config, x, y, 53919);
+                x = x + 1;
+            }
+            y = y + 1;
+        }
+
+        print("Graphics frame pipelines mapped. Active window live loop entry.");
+
+        let mut is_running = 1;
+        let mut status = 0;
+
+        while is_running == 1 {
+            update_surface(win_config);
+            
+            status = *(win_config + 5);
+            if status == 1 {
+                is_running = 0;
+            }
+        }
+    }
+
+    print("Native window context successfully disposed.");
+}
